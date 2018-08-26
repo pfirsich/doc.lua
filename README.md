@@ -19,6 +19,10 @@ The field tags are:
 * `@usage <code>`: Universal. Will also be joined like `@desc`, but will be included as code in the Markdown output.
 * `@see <name>`: Universal. If you want to reference multiple other sections, use multiple lines/tags.
 
+You may also omit the tag name in which case it will simply repeat the last used tag (esp. useful for `@desc` and `@usage`)
+
+When you have prepared your source code, simply execute `lua doc.lua source.lua doc.md` to generate the Markdown for a source file.
+
 An full example with generated output can be found in my ECS library [naw](https://github.com/pfirsich/naw).
 
 A smaller usage example:

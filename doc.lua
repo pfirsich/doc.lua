@@ -77,7 +77,7 @@ local function addField(section, tag, content, isCustom)
     elseif tag == "usage" then
         if section.usage then
             section.usage = section.usage .. "\n" .. content
-        else
+        elseif content:len() > 0 then
             section.usage = content
         end
     elseif isCustom then
@@ -94,12 +94,21 @@ local function parseDoc(path)
 
     local doc = {}
     local currentSection = nil
+    local lastTag = nil
 
     while true do
         local line = io.read("*line")
         if not line then break end
-        local tagType, tag, content = line:match("^%s*%-%-%-?%s*([".. tagTypeClass .. "])([a-zA-Z]+)%s?(.*)$")
+        local tagType, tag, content = line:match("^%s*%-%-%-?%s*([".. tagTypeClass .. "])([a-zA-Z]*)%s?(.*)$")
         if tagType and tag and content then
+            if tag:len() == 0 then
+                if not lastTag then
+                    error("Cannot use repeat tag before any tag was used.")
+                end
+                tag = lastTag
+            end
+            lastTag = tag
+
             if tagType == tagTypes.builtin then
                 if sectionTags[tag] then
                     currentSection = addSection(doc, tag, content)
